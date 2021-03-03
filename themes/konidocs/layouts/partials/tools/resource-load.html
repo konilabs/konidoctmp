@@ -42,6 +42,12 @@
     {{- $resintegrity = true -}}
 {{- end -}}
 
+{{- if eq $restype "text/css" -}}
+    {{- if .Page.Param "res-postprocess" -}}
+        {{- $resource = $resource | resources.PostProcess -}}
+    {{- end -}}
+{{- end -}} 
+
 {{- if eq $restype "application/javascript" -}}
     <script defer src="{{ $resource.RelPermalink }}" {{- if $resintegrity }} integrity="{{ $resource.Data.Integrity }}"{{ end -}} {{- with .option }} {{ . | safeHTMLAttr }}{{ end -}}></script>
 {{ else if eq $restype "text/css" -}}
@@ -49,9 +55,3 @@
 {{- else -}}
     {{ errorf "Cannot load resource %s, resource type %s is not compatible" $resource $resource.MediaType }}
 {{- end -}}
-
-{{- if eq $restype "text/css" -}}
-    {{- if .Page.Param "res-postprocess" -}}
-        {{- $resource = $resource | resources.PostProcess -}}
-    {{- end -}}
-{{- end -}} 
