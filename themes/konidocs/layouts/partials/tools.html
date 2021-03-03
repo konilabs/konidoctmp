@@ -1,0 +1,23 @@
+{{- $toclength := len ( .TableOfContents | replaceRE "<nav id=\"TableOfContents\">" "" | replaceRE "</nav>" "" ) -}}
+
+{{- $toccontent := (.TableOfContents | replaceRE "TableOfContents" "tableofcontents" | replaceRE "<ul>" "<ul class=\"nav\">" | replaceRE "<a " "<a class=\"nav-link\" " | replaceRE "<li>" "<li class=\"nav-item\">" | safeHTML) -}}
+{{- .Scratch.Set "toc_content" $toccontent -}}
+
+{{- .Scratch.Set "toc_show" false -}}
+{{- if gt $toclength 0 -}}
+    {{- if not .Params.hide_toc -}}
+        {{- .Scratch.Set "toc_show" true -}}
+    {{- end -}}
+{{- end -}}
+
+{{- if .Scratch.Get "toc_show" -}}
+    {{- .Scratch.Add "main_classes" (slice "toc") -}}
+{{- else -}}
+    {{- .Scratch.Add "main_classes" (slice "no-toc") -}}
+{{- end -}}
+
+{{- .Scratch.Add "main_classes" (slice .Type) -}}
+
+{{- if ( or (eq .Section "blog") (eq .Section "docs") (.IsHome) ) -}}
+    {{- .Scratch.Set "sidebar_show" true -}}
+{{- end -}}

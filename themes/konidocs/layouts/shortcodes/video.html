@@ -1,0 +1,22 @@
+{{- $poster := .Page.Resources.GetMatch (.Get 0) -}}
+<video class="mx-auto video-js vjs-default-skin vjs-16-9 vjs-big-play-centered" controls poster="{{ $poster.RelPermalink }}" preload="auto" data-setup='{ "language": "{{$.Page.Language.Lang}}" }'>
+    {{- $i := 0 -}}
+    {{- range .Params -}}
+        {{- if gt $i 0 -}}
+            {{- $res := $.Page.Resources.GetMatch . }}
+            <source src="{{ $res.RelPermalink }}" type="{{ $res.MediaType }}">
+        {{- end -}}
+        {{- $i = add $i 1 -}}
+    {{- end }}
+    <p class="vjs-no-js">
+        {{- i18n "video_nojs" -}}
+        {{- $i = 0 -}}
+        {{- range .Params -}}
+            {{- if gt $i 0 -}}
+                {{- $res := $.Page.Resources.GetMatch . }}
+                {{- if gt $i 1 }} {{ i18n "video_nojs_or" }} {{ end -}}<a href="{{ $res.RelPermalink }}">{{ i18n "video_nojs_here" }}</a>
+            {{- end -}}
+            {{- $i = add $i 1 -}}
+        {{- end -}}
+    </p>
+</video>

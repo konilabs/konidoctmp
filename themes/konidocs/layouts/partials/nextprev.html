@@ -1,0 +1,27 @@
+{{- $nextlink := "" -}}
+{{- $nexttitle := "" -}}
+{{- $prevlink := "" -}}
+{{- $prevtitle := "" -}}
+
+{{- with .PrevInSection -}}
+    {{- $prevlink = .Permalink -}}
+    {{- $prevtitle = .Title -}}
+{{- end -}}
+
+{{- with .NextInSection -}}
+    {{- $nextlink = .Permalink -}}
+    {{- $nexttitle = .Title -}}
+{{- end -}}
+
+{{- if or $prevlink $nextlink -}}
+<nav id="nextprev">
+<div {{if not $prevlink}}class="flex-row-reverse"{{ end }}>
+    {{- if $prevlink }}
+    <a href="{{ $prevlink }}">&laquo; {{i18n "nextprev_previous"}} <p>{{ $prevtitle }}</p></a>
+    {{- end -}}
+    {{- if $nextlink }}
+    <a href="{{ $nextlink }}">{{i18n "nextprev_next"}} &raquo; <p>{{ $nexttitle }}</p></a>
+    {{- end }}
+</div>
+</nav>
+{{ end }}

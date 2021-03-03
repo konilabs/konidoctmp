@@ -1,0 +1,9 @@
+<h2>{{ i18n "tagblock_title" }}</h2>
+{{- with ($.Site.GetPage "/blog/tags") -}}
+    <ul>
+        {{- range .Pages -}}
+            {{- $number := len (where (index .Site.Taxonomies.tags .Params.tag_key) "Section" "blog") -}}
+            <li><a href="{{ .Permalink | relURL }}">{{ .Title }} ({{$number}})</a></li>
+        {{- end -}}
+    </ul>
+{{- end }}

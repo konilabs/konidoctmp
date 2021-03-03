@@ -1,0 +1,4 @@
+{{- $katex_main := resources.Get "libs/katex.js" -}}
+{{- $katex_al := resources.Get "libs/katex-auto-render.min.js" -}}
+{{- $katexjs := slice $katex_main $katex_al | resources.Concat "js/katex-full.js" -}}
+{{ partial "tools/resource-load.html" (dict "Page" $ "resource" $katexjs "option" "onload=\"renderMathInElement(document.body,{throwOnError:false});\"") }}

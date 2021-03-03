@@ -1,0 +1,64 @@
+{{- $pages := where .Site.RegularPages ".Type" "blog" -}}
+{{- $limit := .Site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 1 -}}
+{{- $pages = $pages | first $limit -}}
+{{- end -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ .Site.Title }}{{if .Site.IsMultiLingual }} ({{.Site.Language.Lang}}){{ end }}</title>
+    <link>{{ .Permalink }}</link>
+    {{ with .Site.Params.feeddesc }}<description>{{.}}</description>{{ end }}
+    <generator>Hugo -- gohugo.io</generator>{{ with .Site.LanguageCode }}
+    <language>{{.}}</language>{{end}}
+    {{ with $.Site.Params.managingeditormail }}<managingEditor>{{.}} {{ with $.Site.Params.managingeditorname }} ({{.}}){{end}}</managingEditor>{{end}}
+    {{ with $.Site.Params.webmastermail }}<webMaster>{{.}} {{ with $.Site.Params.webmastername }} ({{.}}){{end}}</webMaster>{{end}}
+    {{- with $.Site.Params.copyrighttxt }}
+    <copyright>{{ partial "copyright.html" (dict "context" $ "copyrighttxt" . ) }}</copyright>
+    {{- else -}}
+        {{ with $.Site.Copyright }}
+        <copyright>{{ partial "copyright.html" (dict "context" $ ) }}</copyright>
+        {{ end }}
+    {{end}}
+    <lastBuildDate>{{ now.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>
+    {{- with .OutputFormats.Get "RSS" }}
+	  {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
+    {{- end -}}
+    {{- with .Site.Params.feedcategories }}
+      {{ range . -}}
+      <category>{{.}}</category>
+      {{ end }}
+    {{- end -}}
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+    {{ with .Site.Params.feedttl }}<ttl>{{.}}</ttl>{{ end }}
+    {{- $permalink := .Permalink }}
+    {{- with .Site.Params.feedimg }}
+    <image>
+      <url>{{ . | absURL }}</url>
+      <title>{{ $.Site.Title }}</title>
+      <link>{{ $permalink }}</link>
+    </image>
+    {{- end }}
+    {{- range $pages }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      <guid>{{ .Permalink }}</guid>
+      {{- with .Param "authors" -}}
+        {{- $name := index . 0 -}}
+        {{- $path := printf "/%s/%s" "authors" ($name | urlize) -}}
+        {{- with $.Site.GetPage $path }}
+        <author>{{.Params.email}} ({{ .Title }})</author>
+        {{ end -}}
+      {{- end -}} 
+      {{- with .Params.tags -}}
+      {{ range . -}}
+      <category>{{.}}</category>
+      {{ end }}
+      {{- end -}}
+      <description>{{ .Summary | html }}</description>
+    </item>
+    {{- end }}
+  </channel>
+</rss>

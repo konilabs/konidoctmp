@@ -1,0 +1,21 @@
+{{/* 
+    Loads resources for shortcodes used in current page
+    
+    Example :
+    {{ partial "tools/shortcode-include.html" (dict "Page" . "resource" "header") }}
+
+    Parameters :
+    - Page is the current page '.' context
+    - resource is the shortcode partial resource to load, like : header,footer
+*/}}
+{{- $resource := .resource -}}
+{{- $page := .Page -}}
+{{- range (.Page.Scratch.Get "theme-shortcodes") -}}
+    {{- if $page.HasShortcode . -}}
+        {{- $fullpath := printf "/themes/%s/layouts/partials/shortcode-resources/%s/%s.html" ($.Page.Scratch.Get "theme-name") . $resource -}}
+        {{- if (fileExists $fullpath) -}}
+            {{- $partialpath := printf "shortcode-resources/%s/%s.html" . $resource -}}
+            {{- partialCached $partialpath $page -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}

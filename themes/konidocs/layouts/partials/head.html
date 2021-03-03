@@ -1,0 +1,77 @@
+
+{{- $pagetitle := .Title -}}
+{{- $sitetitle := add " - " .Site.Title -}}
+{{- $pagetitlelen := strings.RuneCount $pagetitle -}}
+{{- $sitetitlelen := strings.RuneCount $sitetitle -}}
+{{- $totallen := add $pagetitlelen $sitetitlelen -}}
+
+<head>
+    <meta charset="utf-8">
+    <title>
+    {{- with .Params.force_title -}}
+        {{- $pagetitle -}}
+    {{- else -}}
+        {{- if le $totallen .Site.Params.titlelength -}}
+            {{- .Title }} - {{ .Site.Title -}}
+        {{- else -}}
+            {{- .Title -}}
+        {{- end -}}
+    {{- end -}}
+    </title>
+    {{- with .Description }}
+        <meta name="description" content="{{ . }}">
+    {{- else -}}
+        {{- warnf "Page %q has no description" .Permalink -}}
+    {{- end -}}
+    <meta name="keywords" content="{{with .Keywords}}{{ delimit . ", " }}, {{end}}{{with .Site.Params.keywords}}{{ delimit . ", " }}{{end}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="{{ $.Site.Params.themecolor }}">
+    {{- with .Site.Params.env -}}
+        {{- if ne . "production" }}
+            <meta name="robots" content="noindex">
+        {{- end -}}
+    {{- end }}
+    {{ hugo.Generator }}
+    {{ if (fileExists "static/humans.txt") -}}
+    <link type="text/plain" rel="author" href="{{ "humans.txt" | relURL }}" />
+    {{- end }}
+    <link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
+    <link rel="apple-touch-icon" href="{{ "images/icon-192x192.png" | relURL }}">
+    <link rel="icon" href="{{ "favicon.ico" | relURL }}" type="image/x-icon">
+
+    {{- $konidocs := resources.Get "css/konidocs.scss" | resources.ToCSS }}
+    {{ partial "tools/resource-load.html" (dict "Page" . "resource" $konidocs) }}
+    {{- partial "tools/shortcode-include.html" (dict "Page" . "resource" "header") -}}
+ 
+    {{/* Outputs RSS and atom for current language and all translations if we are not on home */}}
+    {{- if ne . $.Site.Home }}
+    {{ with $.Site.Home.OutputFormats.Get "rss" -}}
+    {{ printf `<link rel="alternate" type=%q href=%q />` .MediaType.Type .RelPermalink | safeHTML -}}
+    {{- end }}
+    {{ with $.Site.Home.OutputFormats.Get "atom" -}}
+    {{ printf `<link rel="alternate" type=%q href=%q />` .MediaType.Type .RelPermalink | safeHTML -}}
+    {{- end }}
+    {{- range $.Site.Home.Translations -}}
+    {{- $lang := .Lang }}
+    {{ with .OutputFormats.Get "rss" -}}
+    {{ printf `<link rel="alternate" type=%q hreflang=%q href=%q />` .MediaType.Type $lang .RelPermalink | safeHTML -}}
+    {{- end }}
+    {{ with .OutputFormats.Get "atom" -}}
+    {{ printf `<link rel="alternate" type=%q hreflang=%q href=%q />` .MediaType.Type $lang .RelPermalink | safeHTML -}}
+    {{- end -}}
+    {{- end -}}
+    {{ end }}
+
+    {{- range .AlternativeOutputFormats }}
+    {{ printf `<link rel="%s" type="%s" href="%s" />` .Rel .MediaType.Type .RelPermalink | safeHTML -}}
+    {{ end }}
+    {{- range .Translations -}}
+    {{- $lang := .Lang }}
+    {{ with .OutputFormats.Get "html" -}}
+    {{ printf `<link rel="alternate" type=%q hreflang=%q href=%q />` .MediaType.Type $lang .RelPermalink | safeHTML -}}
+    {{- end }}
+    {{- range .AlternativeOutputFormats }}
+    {{ printf `<link rel="alternate" type=%q hreflang=%q href=%q />` .MediaType.Type $lang .RelPermalink | safeHTML -}}
+    {{- end -}}
+    {{- end }}
+</head>

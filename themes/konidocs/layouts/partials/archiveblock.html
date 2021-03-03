@@ -1,0 +1,21 @@
+{{- $month_map := index .Site.Data (i18n "archiveblock_month") -}}
+<h2>{{ i18n "archiveblock_title" }}</h2>
+{{- $taxonomy := .Site.Taxonomies.blogarchives -}}
+{{- $month_names := slice "Error" "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December" }}
+<ul>
+    {{ range $year :=  (seq .Site.Params.startyear now.Year) -}}
+    <li>{{ $year }}
+        <ul>
+        {{- range $month :=  (seq 1 12) -}}
+            {{- $term := printf "%d-%02d" $year $month -}}
+            {{- $number := len (index $taxonomy $term) -}}
+            {{- if gt $number 0 -}}
+                {{- $termurl := (printf "/blogarchives/%s" $term) -}}
+                {{- $termpage := $.Site.GetPage $termurl }}
+                <li><a href="{{ $termpage.Permalink | relURL }}">{{ humanize (index $month_map (printf "%d" $month))}} ({{ $number }})</a></li>
+            {{- end -}}
+        {{- end }}
+        </ul>
+    </li>
+    {{- end }}
+</ul>

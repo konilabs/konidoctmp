@@ -1,0 +1,57 @@
+{{/* 
+    Loads a resources
+    
+    Example :
+    {{ partial "tools/resource-load.html" (dict "Page" . "resource" $resourcevar) }}
+    {{ partial "tools/resource-load.html" (dict "Page" . "resource" $resourcevar "option" "onload=\"renderMathInElement(document.body,{throwOnError:false});\"") }}
+
+    Parameters :
+    - Page is the current page '.' context
+    - resource is a resource variable
+    - option is a string to add in final tag
+*/}}
+{{- $resource := .resource -}}
+{{- $restype := (string $resource.MediaType) -}}
+{{- $resintegrity := false -}}
+
+{{/* When using postprocess with relative-url enabled, it recreates relative URL with this workaround */}}
+{{- $relbase := "" -}}
+{{- if and (.Page.Param "res-postprocess") (.Page.Param "relative-url") -}}
+    {{- $deep := strings.Count "/" (strings.TrimPrefix .Page.Site.BaseURL .Page.Permalink) -}}
+    {{- $deep = sub $deep 1 -}}
+    {{- $relbase = "." -}}
+    {{- if gt $deep 0 -}}
+        {{- $relbase = "" -}}
+        {{- range $i, $sequence := (seq $deep) -}}
+            {{- $relbase = (print $relbase "../") -}}
+        {{- end -}}
+        {{- $relbase = strings.TrimSuffix "/" $relbase -}}
+    {{- end -}}
+{{- end -}}
+
+{{- if eq $restype "text/css" -}}
+    {{- $resource = $resource | resources.PostCSS (dict "config" "assets/cfg/") -}}
+{{- end -}}
+
+{{- if .Page.Param "res-minify" -}}
+    {{- $resource = $resource | resources.Minify -}}
+{{- end -}}
+
+{{- if .Page.Param "res-fingerprint" -}}
+    {{- $resource = $resource | resources.Fingerprint (.Page.Param "res-hash") -}}
+    {{- $resintegrity = true -}}
+{{- end -}}
+
+{{- if eq $restype "application/javascript" -}}
+    <script defer src="{{ $resource.RelPermalink }}" {{- if $resintegrity }} integrity="{{ $resource.Data.Integrity }}"{{ end -}} {{- with .option }} {{ . | safeHTMLAttr }}{{ end -}}></script>
+{{ else if eq $restype "text/css" -}}
+    <link rel="stylesheet" href="{{ $relbase }}{{ $resource.RelPermalink }}" {{- if $resintegrity }} integrity="{{ $resource.Data.Integrity }}"{{ end -}} {{- with .option }} {{ . | safeHTMLAttr }}{{ end -}}>
+{{- else -}}
+    {{ errorf "Cannot load resource %s, resource type %s is not compatible" $resource $resource.MediaType }}
+{{- end -}}
+
+{{- if eq $restype "text/css" -}}
+    {{- if .Page.Param "res-postprocess" -}}
+        {{- $resource = $resource | resources.PostProcess -}}
+    {{- end -}}
+{{- end -}} 

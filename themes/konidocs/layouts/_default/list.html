@@ -1,0 +1,19 @@
+{{- define "main" -}}
+<main class="{{ delimit (.Scratch.Get "main_classes") " " }}">
+    <article>
+        {{- if not .Params.hide_title }}
+        <header>
+            <h1>{{ .Title }}</h1>
+            {{ partial "subtitle.html" . }}
+        </header>
+        {{- end }}
+        {{ partial "notifications.html" . }}
+        {{- .Content }}
+    </article>
+    <ul>
+        {{- range .Pages.ByLinkTitle }}
+        <li><a href="{{.Permalink | relURL }}">{{.LinkTitle}}</a></li>
+        {{- end }}
+    </ul>
+</main>
+{{- end -}}

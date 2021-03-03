@@ -1,0 +1,10 @@
+node_modules/
+public/
+tmp/
+*.code-workspace
+.vscode/*
+resources/
+!/themes/*
+!/themes/konidocs
+/data/gitstatus.json
+/hugo_stats.json

@@ -1,0 +1,45 @@
+{{ define "main" }}
+    <main class="{{ delimit (.Scratch.Get "main_classes") " " }}">
+        {{- $tagcover := resources.Get "images/default-tagcover.jpg" -}}
+        {{- with .Resources.GetMatch "cover" -}}
+            {{- $tagcover = . -}}
+        {{- end -}}
+        {{- $tagcover = $tagcover.Fill "1900x400 Center" -}}
+
+        {{- if not .Params.hide_title -}}
+        <h1>{{ .Title }}</h1>
+        {{- end -}}
+        {{ partial "notifications.html" . }}
+
+        {{- $alt := "" -}}
+        {{- with $tagcover.Params.alt -}}
+            {{- $alt = . -}}
+        {{- else -}}
+            {{- warnf "Tagcover %q has no alt attribute" .Permalink -}}
+        {{- end -}}
+
+        <img src="{{ $tagcover.RelPermalink }}" class="img-fluid rounded" alt="{{ $alt }}">
+        {{ .Content }}
+        {{- range where (index .Site.Taxonomies.tags .Params.tag_key) "Section" "blog" -}}
+        <article>
+            {{- $cover := resources.Get "images/default-cover.jpg" -}}
+            {{- with .Resources.GetMatch "cover" }}
+                {{- $cover = . -}}
+            {{- end -}}
+            {{- $cover = $cover.Fill "1900x400 Center" -}}
+
+            {{- $alt := "" -}}
+            {{- with $cover.Params.alt -}}
+                {{- $alt = . -}}
+            {{- else -}}
+                {{- warnf "Cover %q has no alt attribute" $cover.Permalink -}}
+            {{- end }}
+            <h2><a href="{{.Permalink | relURL }}">{{.LinkTitle}}</a></h2>
+            <img src="{{ $cover.RelPermalink }}" class="img-fluid rounded" alt="{{ $alt }}">
+            {{ .Summary }}
+        </article>
+        {{- end }}
+    </main>
+    {{ partial "blognavbar.html" . }}
+{{ end }}
+

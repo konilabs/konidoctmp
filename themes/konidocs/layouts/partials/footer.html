@@ -1,0 +1,28 @@
+<nav id="nav" class="nav justify-content-center">
+    {{ range .Site.Menus.footer }}
+        {{- $text := print .Name | safeHTML -}}
+        <a class="nav-link" href="{{ .URL }}">{{ $text }}</a>
+    {{- end }}
+</nav>
+
+{{- $copyright := partial "copyright.html"  (dict "context" . ) }}
+<p>
+    {{ $copyright | safeHTML -}}<br />
+</p>
+
+{{- $modernizr := resources.Get "libs/modernizr.js" -}}
+{{- $jquery := resources.Get "libs/jquery.js" -}}
+{{- $popper := resources.Get "libs/popper.js" -}}
+{{- $bs_util := resources.Get "libs/bootstrap/js/util.js" -}}
+{{- $bs_button := resources.Get "libs/bootstrap/js/button.js" -}}
+{{- $bs_collapse := resources.Get "libs/bootstrap/js/collapse.js" -}}
+{{- $bs_scrollspy := resources.Get "libs/bootstrap/js/scrollspy.js" -}}
+{{- $bs_dropdown := resources.Get "libs/bootstrap/js/dropdown.js" -}}
+{{- $bs_modal := resources.Get "libs/bootstrap/js/modal.js" -}}
+{{- $bs_carousel := resources.Get "libs/bootstrap/js/carousel.js" -}}
+{{- $bootstrapjs := slice $bs_util $bs_button $bs_collapse $bs_scrollspy $bs_dropdown $bs_modal $bs_carousel | resources.Concat "js/bootstrapbundle.js" -}}
+
+{{- $plugins := resources.Get "js/plugins.js" -}}
+{{- $konidocsjs := slice $modernizr $jquery $popper $bootstrapjs $plugins | resources.Concat "js/konidocs.js" }}
+{{ partialCached "tools/resource-load.html" (dict "Page" . "resource" $konidocsjs) $konidocsjs }}
+{{ partial "tools/shortcode-include.html" (dict "Page" . "resource" "footer") }}

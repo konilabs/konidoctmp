@@ -1,0 +1,33 @@
+<nav class="nav collapse leftside" id="sidebar">
+    <h2>{{ i18n "menu" }}</h2>
+        {{ template "navmenu" (dict "pagelist" .Site.Pages "parentpage" (.Site.GetPage "/docs") "currentpage" .) }}
+</nav>
+{{- define "navmenu" -}}
+    {{- $i := 0 -}}
+    {{- $pagelist := .pagelist -}}
+    {{- $parentpage := .parentpage -}}
+    {{- $currentpage := .currentpage -}}
+    {{- range .pagelist.GroupBy "Weight" -}}
+        {{- range .Pages.ByLinkTitle -}}
+            {{- if not .Params.hide_from_menu -}}
+                {{- if eq .Kind "page" "section" -}}
+                    {{- if eq .Parent $parentpage -}}
+                        {{- $i = add $i 1 -}}
+                        {{- if eq $i 1 -}}
+                            <ul class="nav">
+                        {{ end -}}
+                        <li{{ if (and (eq .Kind "section") (.InSection $currentpage)) }} class="unfolded"{{ end }}>
+                            <a href="{{ .Permalink | relURL }}" class="nav-link{{ if eq . $currentpage }} active{{ end }}" >{{ .LinkTitle }}</a>
+                        </li>
+                        {{ if .IsAncestor $currentpage -}}
+                            {{- template "navmenu" (dict "pagelist" $pagelist "parentpage" . "currentpage" $currentpage) -}}
+                        {{- end -}}
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+    {{- if ge $i 1 -}}
+        </ul>
+    {{- end -}}   
+{{- end -}}

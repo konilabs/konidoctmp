@@ -1,0 +1,9 @@
+<div class="subtitle">
+    <div>
+        <span class="kf kf-readtime"></span>{{ i18n "subtitle_readtime" .ReadingTime }}
+    </div>
+    <div class="text-right">
+        <span class="kf kf-date"></span>{{ i18n "subtitle_published" . }}
+        {{- if ne (.Date.Format "02012006") (.Lastmod.Format "02012006")}} - {{ i18n "subtitle_updated" . }}{{ end }}
+    </div>
+</div>

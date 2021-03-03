@@ -1,0 +1,188 @@
+baseURL = "https://www.konilabs.net"
+defaultContentLanguage = "en"
+title = "Konilabs"
+theme = "konidocs"
+enableRobotsTXT = true
+enableGitInfo = true
+pygmentsUseClasses = true
+enableEmoji = true
+
+[languages]
+  [languages.en]
+    weight = 1
+    languageCode = "en-US"
+    languageName = "English"
+    copyright = "© Copyright {startyear}-{year} Nicolas PERRIN - Licensed under a <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-nc-nd/4.0/\">Creative Commons BY-NC-ND 4.0 International License</a>."
+  [languages.fr]
+    weight = 2
+    languageCode = "fr-FR"
+    languageName = "Français"
+    copyright = "© Copyright {startyear}-{year} Nicolas PERRIN - Sous licence <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-nc-nd/4.0/deed.fr\">Creative Commons BY-NC-ND 4.0 Internationale</a>."
+
+[languages.fr.menu]
+  [[languages.fr.menu.main]]
+    identifier = "docs"
+    name = "Docs"
+    url = "/docs/"
+    weight = 2
+
+[languages.en.params]
+  keywords = ["konilabs", "electronics", "hardware", "technology", "science", "embedded", "firmware"]
+  copyrighttxt = "Copyright {startyear}-{year} Nicolas PERRIN - Licensed under a Creative Commons BY-NC-ND 4.0 International License."
+  feeddesc = "Fresh blogs posts from Konilabs, an electronics engineer blog"
+  feedcategories = ["blog", "electronics", "engineering", "geek", "hardware", "technology"]
+
+[languages.fr.params]
+  keywords = ["konilabs", "électronique", "hardware", "technologie", "science", "embarqué", "firmware"]
+  copyrighttxt = "Copyright {startyear}-{year} Nicolas PERRIN - Sous licence Creative Commons BY-NC-ND 4.0 Internationale."
+  feeddesc = "Les dernières nouvelles de Konilabs, le blog qui parle d'électronique"
+  feedcategories = ["blog", "électronique", "ingénierie", "geek", "hardware", "technologie"]
+
+[params]
+  themecolor = "#fafafa"
+  titlelength = 60
+  dateformat = "02 Jan 2006"
+  datehoursecondformat = "02 Jan 2006 - 15:04:05"
+  startyear = 2020
+  webmastername = "Nicolas PERRIN"
+  webmastermail = "nicolas@konilabs.net"
+  managingeditorname = "Nicolas PERRIN"
+  managingeditormail = "nicolas@konilabs.net"
+  feedttl = 720
+  feedimg = "images/icon-96x96.png"
+  atomlogo = "images/logo-atom.png"
+  img_shortcode = "400x400"
+  img_shortcode_inlinefill = "400x400 Center"
+  img_shortcode_hoverfill = "600x600 Center"
+  img_lightbox = "1920x1200 Center"
+  env = "production"
+  res-minify = true
+  res-fingerprint = true
+  res-postprocess = true
+  res-hash = "sha256"
+
+[params.img]
+  [[params.img.default.img]]
+    transform = "Fit"
+    settings= "800x400 Center"
+  [[params.img.default.inline]]
+    transform = "Fill"
+    settings= "400x400 Center"
+  [[params.img.default.hover]]
+    transform = "Fill"
+    settings= "400x400 Center"
+  [[params.img.default.lightbox]]
+    transform = "Fit"
+    settings= "1920x1200 Center"
+
+  [[params.img.med.img]]
+    transform = "Fit"
+    settings= "1000x600 Center"
+
+  [[params.img.large.img]]
+    transform = "Fit"
+    settings= "1000x400 Center"
+  [[params.img.large.inline]]
+    transform = "Fill"
+    settings= "1000x400 Center"
+  [[params.img.large.hover]]
+    transform = "Fill"
+    settings= "1000x400 Center"
+
+[mediaTypes]
+  [mediaTypes."application/webmanifest"]
+    suffixes = ["webmanifest"]
+  [mediaTypes."application/atom+xml"]
+    suffixes = ["xml"]
+  [mediaTypes."text/x-php"]
+    suffixes = ["php"]
+
+[outputFormats]
+  [outputFormats.webmanifest]
+    name = "webmanifest"
+    baseName = "site"
+    mediaType = "application/webmanifest"
+    permalinkable = false
+    isHTML = false
+    isPlainText = true
+    notAlternative = true
+
+  [outputFormats.browserconfig]
+    name = "browserconfig"
+    baseName = "browserconfig"
+    mediaType = "application/xml"
+    permalinkable = false
+    isHTML = false
+    isPlainText = true
+    noUgly = true
+    notAlternative = true
+
+  [outputFormats.atom]
+    name = "atom"
+    baseName = "atom"
+    mediaType = "application/atom+xml"
+    permalinkable = false
+    isHTML = false
+    isPlainText = false
+    noUgly = true
+
+  [outputFormats.rss]
+    name = "rss"
+    baseName = "rss"
+    mediaType = "application/rss+xml"
+    permalinkable = false
+    isHTML = false
+    isPlainText = false
+    noUgly = true
+
+  [outputFormats.php]
+    name = "php"
+    baseName = "index"
+    mediaType = "text/x-php"
+    permalinkable = true
+    isHTML = true
+    isPlainText = false
+    noUgly = true
+
+[outputs]
+  home = ["HTML", "WEBMANIFEST", "BROWSERCONFIG", "RSS", "ATOM"]
+  section	= ["HTML"]
+  taxonomy = ["HTML"]
+  term = ["HTML"]
+
+[permalinks]
+  blogarchives = "/blog/archives/:slug/"
+  tags = "/tags/:slug/"
+
+[related]
+  includeNewer = true
+  threshold = 80
+  toLower = true
+
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+
+[taxonomies]
+  author = "authors"
+  tag = "tags"
+  blogarchive = "blogarchives"
+
+[markup.goldmark.renderer]
+  unsafe= true 
+
+[minify]
+  minifyOutput = true
+  [minify.tdewolff.html]
+    keepComments = true
+
+[build]
+  writeStats = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.parser]
+      autoHeadingIDType = "github-ascii"
+
+[frontmatter]
+lastmod = ["lastmod", ":git", "date", "publishDate"]

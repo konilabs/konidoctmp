@@ -1,0 +1,100 @@
+.chroma {
+  @extend .text-body, .bg-light, .p-3;
+}
+
+.chroma {
+  .err {
+    color: var(--red);
+  }
+
+  .k,
+  .kc,
+  .kd,
+  .kp,
+  .kr,
+  .kt,
+  .no {
+    color: var(--cyan);
+  }
+
+  .kn,
+  .nt,
+  .o,
+  .ow {
+    color: var(--pink);
+  }
+
+  .na,
+  .nc,
+  .nd,
+  .ne,
+  .nf,
+  .nx {
+    color: var(--teal);
+  }
+
+  .bp,
+  .fm,
+  .n,
+  .nb,
+  .ni,
+  .nl,
+  .nn,
+  .p,
+  .py,
+  .nv,
+  .vc,
+  .vg,
+  .vi,
+  .vm {
+    color: var(--gray-dark);
+  }
+
+  .il,
+  .l,
+  .m,
+  .mb,
+  .mf,
+  .mh,
+  .mi,
+  .mo {
+    color: var(--purple);
+  }
+  .dl,
+  .ld,
+  .s,
+  .sa,
+  .sb,
+  .sc,
+  .sd,
+  .sh,
+  .si,
+  .sr,
+  .ss,
+  .sx,
+  .s1,
+  .s2 {
+    color: var(--orange);
+  }
+
+  .se {
+    color: var(--indigo);
+  }
+
+  .c,
+  .ch,
+  .cm,
+  .cp,
+  .cpf,
+  .cs,
+  .c1 {
+    color: var(--gray);
+  }
+
+  .ge {
+    @extend .font-italic;
+  }
+  .gs {
+    @extend .font-weight-bold;
+  }
+}

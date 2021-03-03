@@ -1,0 +1,29 @@
+{{/* Use first parameter or src as Image source */}}
+{{- $file := "" -}}
+{{- $txt := "" -}}
+{{- $title := "" -}}
+{{- if .IsNamedParams -}}
+    {{- $file = .Page.Resources.GetMatch (.Get "src") -}}
+    {{- $txt = .Get "txt" -}}
+{{- else -}}
+    {{- $file = .Page.Resources.GetMatch (.Get 0) -}}
+    {{- $txt = .Get 1 -}}
+{{- end -}}
+
+{{/* Generates a warning if ressource has no title */}}
+{{- if eq (path.Base $file.Permalink) $file.Title -}}
+    {{ warnf "Please add a title to ressource %q" $file.RelPermalink }}
+{{- end -}}
+
+{{/* Select icon depending on filetype */}}
+{{- $type := "file" -}}
+{{- if eq  $file.MediaType.SubType "pdf" -}}
+    {{- $type = "pdf" -}}
+{{- end -}}
+{{- if eq  $file.MediaType.SubType "x-zip-compressed" -}}
+    {{- $type = "zip" -}}
+{{- end -}}
+<a href="{{ $file.RelPermalink }}" class="fileicon" {{ if $txt }}title="{{ $file.Title }}"{{ end }} >
+    <span>{{- if $txt -}}{{- $txt -}}{{- else -}}{{- $file.Title -}}{{- end -}}</span>
+    <span class="kf kf-{{ $type }}"></span>
+</a>

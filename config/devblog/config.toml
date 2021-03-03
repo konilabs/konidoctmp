@@ -1,0 +1,4 @@
+baseURL = "https://devblog.konilabs.net"
+
+[params]
+  env = "devblog"

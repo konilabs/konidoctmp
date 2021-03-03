@@ -1,0 +1,15 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+/* TEAM */
+	Chef:Nicolax PERRIN
+	From:Paris, France
+
+/* THANKS */
+
+
+/* SITE */
+	Last update:2012/02/04
+	Language: English
+	Doctype:HTML5
+	IDE: VSCodium, Paint.net

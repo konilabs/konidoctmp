@@ -1,0 +1,8 @@
+<h2>{{ i18n "lastblock_title" }}</h2>
+{{ with (where .Site.RegularPages.ByPublishDate.Reverse "Type" "blog" ) -}}
+<ul>
+    {{- range first 10 . }}
+    <li><a href="{{ .Permalink | relURL }}">{{ .LinkTitle}}</a></li>
+    {{- end }}
+</ul>
+{{- end }}

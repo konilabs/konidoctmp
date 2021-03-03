@@ -1,0 +1,88 @@
+{{- $resources := .Resources.ByType "image" -}}
+{{- $page := . -}}
+{{- $galleries := slice -}}
+{{- range $resources -}}
+  {{- if .Params.gallery -}}
+    {{- $galleries = $galleries | append (slice .Params.gallery) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $galleries := uniq $galleries -}}
+
+{{- range $galleries -}}
+<div class="lightbox modal fade" id="{{.}}-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div id="{{.}}-carousel" class="carousel slide" data-interval="false">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="carousel-inner">
+            <ol class="carousel-indicators">
+            {{- $i := 0 -}}
+            {{- range sort (where $resources "Params.gallery" . ) ".Params.id" }}
+              <li data-target="#{{.Params.gallery}}-carousel" data-slide-to="{{.Params.id}}"{{ if eq $i 0 }} class="active"{{ end }}></li>
+              {{- if ne $i .Params.id -}}
+                {{- warnf "Images gallery id must be consecutives and start with 0 : %v Gallery=%v image=%v current-id=%v expected-id=%v" $page .Params.gallery . .Params.id $i -}}
+              {{- end -}}
+              {{- $i = add $i 1 -}}
+            {{- end }}
+            </ol>
+          {{- $i := 0 -}}
+          {{- range sort (where $resources "Params.gallery" . ) ".Params.id" }}
+            <div class="carousel-item{{ if eq $i 0 }} active{{end}}">
+            {{- $imglightbox := . -}} 
+            {{- with $.Site.Params.img_lightbox -}}
+                {{- $imglightbox = $imglightbox.Fit . -}}
+            {{- else -}}
+                {{- $imglightbox = $imglightbox.Fit "1920x1200 Center" -}}
+            {{- end }}
+              <img src="{{$imglightbox.RelPermalink}}" alt="{{.Title}}">
+              <div class="carousel-caption">
+                <p>{{ if ne (path.Base .Permalink) .Title}}{{ .Title }} - {{ end }}<a href="{{.RelPermalink}}">{{ i18n "lightbox_original" }}</a></p>
+              </div>
+            </div>
+            {{- $i = add $i 1 -}}
+          {{- end }}
+        </div>
+          <a class="carousel-control-prev" href="#{{.}}-carousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#{{.}}-carousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{- end -}}
+{{- range $resources -}}
+{{- if .Params.gallery -}}
+{{- else }}
+<div class="lightbox modal fade" id="{{ anchorize (path.Base .Permalink) }}-modal" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="carousel-inner">
+          {{- $imglightbox := . -}} 
+          {{ $imglightbox = partial "tools/img-process.html" (dict "Page" $.Site "resource" $imglightbox "context" "lightbox" "preset" "default") }}
+          <div class="carousel-item active">
+            <img src="{{$imglightbox.RelPermalink}}" alt="{{.Title}}">
+            <div class="carousel-caption">
+              <p>{{ if ne (path.Base .Permalink) .Title}}{{ .Title }} - {{ end }}<a href="{{.RelPermalink}}">{{ i18n "lightbox_original" }}</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{- end -}}
+{{- end }}

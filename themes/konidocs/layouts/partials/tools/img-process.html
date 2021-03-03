@@ -1,0 +1,36 @@
+{{/* 
+    Do global image process
+    
+    Example :
+    {{ partial "tools/img-process.html" (dict "Page" . "resource" $resourcevar "context" "contextname" "preset" "presetname") }}
+
+    Parameters :
+    - Page is the current page '.' context
+    - resource is a resource variable to transform
+    - context is the tag (img, hover, inline, lightbox ...)
+    - preset is the image process preset
+*/}}
+{{- $resource := .resource -}}
+{{- $tmp_preset := .preset -}}
+{{- $preset := "default" -}}
+
+{{- with (index .Page.Params.img .preset) -}}
+    {{- $preset = $tmp_preset -}}
+{{ else }}
+    {{- warnf "Requested image process preset %q does not exist, falling back to default" $tmp_preset -}}
+{{- end -}}
+
+{{- range (index (index .Page.Params.img $preset) .context) -}}
+    {{- if (eq .transform "Resize") -}}
+        {{- $resource = $resource.Resize .settings -}} 
+    {{- else if (eq .transform "Fill") -}}
+        {{- $resource = $resource.Fill .settings -}} 
+    {{- else if (eq .transform "Fit") -}}
+        {{- $resource = $resource.Fit .settings -}} 
+    {{- else -}}
+        {{- warnf "Requested image transformation %q does not exist, doing nothing !" .transform -}}
+    {{- end -}}
+{{- end -}}
+
+{{- return $resource -}}
+

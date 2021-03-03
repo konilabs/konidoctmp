@@ -1,0 +1,38 @@
+{{ define "main" }}
+    <main class="{{ delimit (.Scratch.Get "main_classes") " " }}">
+        {{- $cover := resources.Get "images/default-cover.jpg" -}}
+        {{- with .Resources.GetMatch "cover" -}}
+            {{- $cover = . -}}
+        {{- end -}}
+        {{- $cover = $cover.Fill "1900x400 Center" -}}
+        
+        {{- if not .Params.hide_title }}
+        <h1>{{ .Title }}</h1>
+        {{ partial "subtitle.html" . }}
+        {{ end -}}
+        
+        {{ partial "notifications.html" . }}
+        <img src="{{ $cover.RelPermalink }}" alt="{{ $cover.Title }}" class="blog-cover" >
+        {{ .Content }}
+        {{- partial "taglist.html" . }}
+        {{ partial "nextprev.html" . }}
+        <aside>
+            <div class="card-body">
+                {{ $related := (where (.Site.RegularPages.Related .) "Type" "blog") | first 5 }}
+                {{- with $related -}}
+                <h2>{{ i18n "blog_single_related" }}</h2>
+                <ul>
+                    {{ range . }}
+                    <li><a href="{{ .RelPermalink | relURL }}">{{ .Title }}</a></li>
+                    {{ end }}
+                </ul>
+                {{- end -}}
+                <h2>{{ i18n "blog_single_share" }}</h2>
+                {{ partial "socialshare.html" . }}
+                <h2>{{ i18n "blog_single_author" }}</h2>
+                {{ partial "aboutauthor.html" . }}
+            </div>
+        </aside>
+    </main>
+    {{ partial "blognavbar.html" . }}
+{{ end }}

@@ -1,0 +1,32 @@
+{{- define "main" -}}
+<main class="{{ delimit (.Scratch.Get "main_classes") " " }}">
+    <article>
+        {{- if not .Params.hide_title }}
+        <header>
+            <h1>{{ .Title }}</h1>
+            {{ partial "subtitle.html" . }}
+        </header>
+        {{- end }}
+        {{ partial "notifications.html" . }}
+        {{- .Content }}
+    </article>
+    <ul>
+        {{- $year := int .Page.Params.slug -}}
+        {{- $taxonomy := .Site.Taxonomies.blogarchives -}}
+        {{- range $month :=  (seq 1 12) -}}
+            {{- $term := printf "%d-%02d" $year $month -}}
+            {{- $termtax := index $taxonomy $term -}}
+            {{- if gt (len $termtax.Pages) 0 -}}
+                {{- $termurl := (printf "/blogarchives/%s" $term) -}}
+                {{- $termpage := $.Site.GetPage $termurl }}
+                <li><a href="{{ $termpage.Permalink | relURL }}">{{ $termpage.Title }}</a></li>
+                <ul>
+                    {{- range $termtax.Pages }}
+                    <li><a href="{{ .Permalink | relURL }}">{{ .Title }}</a></li>
+                    {{- end }}
+                </ul>
+            {{- end -}}
+        {{- end }}
+    </ul>
+</main>
+{{- end -}}

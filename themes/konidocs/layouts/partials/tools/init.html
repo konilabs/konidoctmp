@@ -1,0 +1,8 @@
+{{/* Theme init file */}}
+{{- $.Scratch.Set "theme-name" "konidocs" -}}
+
+{{/* List current theme shortcode */}}
+{{- $path := printf "/themes/%s/layouts/shortcodes" (.Scratch.Get "theme-name") -}}
+{{- range (readDir $path) -}}
+    {{- $.Scratch.Add "theme-shortcodes" (slice (strings.TrimSuffix ".html" .Name)) -}}
+{{- end -}}

@@ -1,0 +1,30 @@
+{{ define "main" }}
+    <main class="{{ delimit (.Scratch.Get "main_classes") " " }}">
+        {{- if not .Params.hide_title }}
+        <h1>{{ .Title }}</h1>
+        {{ end -}}
+        {{ partial "notifications.html" . }}
+        {{ .Content }}
+        {{- $paginator := .Paginate (where .Site.RegularPages "Type" "blogtag") -}}
+        {{- range $paginator.Pages -}}
+        <article>
+            {{- $tagcover := resources.Get "images/default-tagcover.jpg" -}}
+            {{- with .Resources.GetMatch "cover" -}}
+                    {{- $tagcover = . -}}
+            {{- end -}}
+            {{- $tagcover = $tagcover.Fill "1900x400 Center" }}
+            <h2><a href="{{ .Permalink | relURL }}">{{.LinkTitle}}</a></h2>
+            {{- $alt := "" -}}
+            {{- with $tagcover.Params.alt -}}
+                {{- $alt = . -}}
+            {{- else -}}
+                {{- warnf "Tagcover %q has no alt attribute" .Permalink -}}
+            {{- end }}
+            <img src="{{ $tagcover.RelPermalink }}" class="img-fluid rounded" alt="{{ $alt }}">
+            {{ .Summary }}
+        </article>
+        {{ end -}}
+        {{- partial "pagination.html" . -}}
+    </main>
+    {{ partial "blognavbar.html" . }}
+{{ end }}

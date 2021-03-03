@@ -1,0 +1,12 @@
+{{- if eq hugo.Environment "development" -}}
+    <div class="alert alert-warning">{{ i18n "site_in_devmode" }}</div>
+    {{- if .Draft -}}
+        <div class="alert alert-warning">{{ i18n "content_is_draft" }}</div>
+    {{- end -}}
+    {{- if gt .PublishDate.Unix now.Unix -}}
+        <div class="alert alert-warning">{{ i18n "content_is_future" . }}</div>
+    {{- end -}}
+    {{- if .ExpiryDate -}}
+        <div class="alert alert-warning">{{ i18n "content_to_expire" . }}</div>
+    {{- end -}}
+{{- end -}}

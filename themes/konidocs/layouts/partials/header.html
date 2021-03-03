@@ -1,0 +1,30 @@
+<div id="logo">
+    <div id="logo-container">
+        <a href="{{ .Site.Home.Permalink | relURL }}{{with .Site.Params.env}}{{if eq . "local"}}index.html{{end}}{{end}}">
+            <img src="/images/logo.svg" width="30" height="30" class="d-inline-block align-top" alt="{{ .Site.Title }}"><h1>{{ .Site.Title }}</h1>
+        </a>
+    </div>
+    {{- if .Scratch.Get "sidebar_show" }}
+    <button type="button" data-toggle="collapse" data-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle docs navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" role="img" focusable="false">
+            <title>{{ i18n "menu" }}</title>
+            <path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path>
+        </svg>
+    </button>
+    {{- end }}
+</div>
+<ul id="sectionmenu">
+    {{- $currentPage := . -}}
+    {{- range .Site.Menus.main -}}
+        {{- $class := "" -}}
+        {{- with .Page -}}
+            {{- if eq .Type $currentPage.Type -}}
+                {{- $class = "active" -}}
+            {{- end -}}
+        {{- end }}
+    <li>
+        <a class="nav-link {{$class}}" href="{{ .URL | relURL }}" title="{{ .Title }}">{{ .Name }}</a>
+    </li>
+    {{- end }}
+</ul>
+{{ partial "languageswitcher.html" . }}

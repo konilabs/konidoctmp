@@ -1,0 +1,5 @@
+{{- $videojs_main := resources.Get "libs/video-js.js" -}}
+{{- $videojs_fr := resources.Get "libs/video-js-fr.js" -}}
+{{- $videojs_en := resources.Get "libs/video-js-en.js" -}}
+{{- $videojs := slice $videojs_main $videojs_fr $videojs_en | resources.Concat "js/videojs-full.js" -}}
+{{ partial "tools/resource-load.html" (dict "Page" $ "resource" $videojs) }}

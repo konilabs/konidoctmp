@@ -1,0 +1,2 @@
+{{- $katexcss := slice (resources.Get "libs/katex.css") | resources.Concat "css/katex.css" -}}
+{{ partial "tools/resource-load.html" (dict "Page" $ "resource" $katexcss) }}

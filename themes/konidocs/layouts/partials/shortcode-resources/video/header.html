@@ -1,0 +1,2 @@
+{{- $videojscss := slice (resources.Get "libs/video-js.css") | resources.Concat "css/video-js.css" -}}
+{{ partial "tools/resource-load.html" (dict "Page" $ "resource" $videojscss) }}

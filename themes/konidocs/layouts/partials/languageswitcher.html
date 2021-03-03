@@ -1,0 +1,42 @@
+{{- if .Site.IsMultiLingual -}}
+{{- $page := .Page -}}
+{{- $pagetranslations := .Translations -}}
+<div class="language-switcher">
+    <a class="lsbutton" id="lsmenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ .Site.Language.LanguageName }}</a>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="lsmenu">
+    {{- range .Site.Languages -}}
+        {{- if ne .LanguageName $.Site.Language.LanguageName -}}
+            {{- $href := "" -}}
+            {{- $languagetxt := "" -}}
+            {{- $langname := .LanguageName -}}
+            {{- $langcode := .Lang -}}
+            {{- range ($.Site.GetPage "/").Translations -}}
+                {{- if eq $langname .Language.LanguageName -}}
+                    {{- $href = .Permalink -}}
+                    {{- $languagetxt = printf "%s (%s)" $langname (i18n ( printf "language_%s_notranslation"  $langcode )) -}}
+                    {{- with .Site.Params.env -}}
+                        {{- if eq . "local" -}}
+                            {{- $href = (printf "%sindex.html" $href) -}}
+                        {{- end -}}
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+            {{- range $pagetranslations -}}
+                {{- if eq $langname .Language.LanguageName -}}
+                    {{- $href = .Permalink -}}
+                    {{- $languagetxt = $langname -}}
+                    {{- with .Site.Params.env -}}
+                        {{- if eq . "local" -}}
+                            {{- if eq $page $.Site.Home -}}
+                                {{- $href = (printf "%sindex.html" $href) -}}
+                            {{- end -}}
+                        {{- end -}}
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+            <a class="dropdown-item" title="{{ $languagetxt }}" href="{{ $href | relURL }}">{{ $languagetxt }}</a>
+        {{- end }}
+    {{- end }}
+    </div>
+</div>
+{{- end -}}

@@ -1,0 +1,8 @@
+baseURL = "."
+relativeURLs = true
+uglyURLs = true
+
+[params]
+  env = "local"
+  res-fingerprint = false
+  relative-url = true

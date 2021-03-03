@@ -1,0 +1,14 @@
+{{- with .Param "tags" }}
+<div class="tag-list">
+  <span class="font-weight-bold">{{i18n "taglist_categories" (len .) }} :</span>
+  <ul>
+    {{- range $tag := . -}}
+      {{- with $.Site.GetPage (printf "/blog/tags/%s" $tag) }}
+      <li>
+        <a href="{{ .Permalink | relURL }}"><span class="kf kf-tag"></span>{{ .Title }}</a>
+      </li>
+      {{ end -}}
+    {{- end -}}
+  </ul>
+</div>
+{{ end -}}

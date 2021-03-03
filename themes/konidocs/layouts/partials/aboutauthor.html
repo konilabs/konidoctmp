@@ -1,0 +1,21 @@
+{{- range .Param "authors" -}}
+    {{- $name := . -}}
+    {{- $path := printf "/%s/%s" "authors" ($name | urlize) -}}
+    {{- with $.Site.GetPage $path -}}
+    {{- $authorpic := resources.Get "images/default-author.png" -}}
+    {{- with .Resources.GetMatch "author-picture" -}}
+        {{- $authorpic = . -}}
+    {{- end -}}
+    {{- $authorpic = $authorpic.Fill "200x200" -}}
+    <div class="row">
+        <div class="col-2">
+            <img src="{{ $authorpic.RelPermalink }}" alt="{{ $authorpic.Title }}" class="img-thumbnail rounded" >
+        </div>
+        <div class="col">
+            <h3>{{ .Title }}</h3>
+            {{ .Content -}}
+            <a href="{{.Permalink | relURL }}">{{ i18n "aboutauthor_more" }}</a>
+        </div>
+    </div>
+    {{- end -}}
+{{- end -}}

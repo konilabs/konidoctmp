@@ -1,0 +1,8 @@
+{{- with .Site.Home.OutputFormats.Get "rss" -}}
+<h2>{{ i18n "rssblock_title_rss" }}</h2>
+<a href="{{ .Permalink | relURL }}">{{ i18n "rssblock_link_rss" }}</a>
+{{- end }}
+{{- with .Site.Home.OutputFormats.Get "atom" -}}
+<h2>{{ i18n "rssblock_title_atom" }}</h2>
+<a href="{{ .Permalink | relURL }}">{{ i18n "rssblock_link_atom" }}</a>
+{{- end }}

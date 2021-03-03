@@ -1,0 +1,7 @@
+{{ $copyright := .context.Site.Copyright }}
+{{ with .copyrighttxt }}
+    {{ $copyright = . }}
+{{ end }}
+{{ $copyright := replace $copyright "{year}" now.Year }}
+{{ $copyright := replace $copyright "{startyear}" .context.Site.Params.startyear }}
+{{ return $copyright }}

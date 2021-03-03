@@ -1,0 +1,147 @@
+# baseof.html
+
+[site_in_devmode]
+other = "Site en mode développement"
+
+[content_is_draft]
+other = "Le contenu est marqué comme brouillon, il ne sera pas publié"
+
+[content_is_future]
+other = "Le contenu sera publié dans le futur le {{ .PublishDate }}"
+
+[content_to_expire]
+other = "Le contenu expirera le {{ .ExpiryDate }}"
+
+[browser_upgrade]
+other ="Vous utilisez un navigateur internet <strong>obsolète</strong>. Merci de mettre à jour votre <a href=\"https://browsehappy.com/\">navigateur internet</a> pour améliorer votre expérience et votre sécurité."
+
+# header.html + sidemenu.html
+
+[menu]
+other = "Menu"
+
+# blog/single.html
+
+[blog_single_share]
+other = "Partager cet article sur"
+
+[blog_single_author]
+other = "A propos de l'auteur"
+
+[blog_single_related]
+other = "A voir aussi"
+
+# blog/list.html
+
+[blog_list_readmore]
+other = "Lire la suite..."
+
+## Partials
+# archiveblock.html
+
+[archiveblock_title]
+other = "Archives"
+
+[archiveblock_month]
+other = "monthfr"
+
+#lastblock.html
+
+[lastblock_title]
+other = "Derniers articles"
+
+#tagblock.html
+
+[tagblock_title]
+other = "Catégories"
+
+#rssblock.html
+
+[rssblock_title_rss]
+other = "Flux RSS"
+
+[rssblock_link_rss]
+other = "Lien vers le flux RSS"
+
+[rssblock_title_atom]
+other = "Flux Atom"
+
+[rssblock_link_atom]
+other = "Lien vers le flux Atom"
+
+#language_switcher.html
+[language_fr_notranslation]
+other = "Page non traduite"
+
+[language_en_notranslation]
+other = "Page not translated"
+
+#nextprev.html
+[nextprev_previous]
+other = "Précédent"
+
+[nextprev_next]
+other = "Suivant"
+
+#social_share.html
+[sc_share_twitter]
+other = "Partager sur Twitter"
+
+[sc_share_facebook]
+other = "Partager sur Facebook"
+
+[sc_share_linkedin]
+other = "Partager sur LinkedIn"
+
+[sc_share_email]
+other = "Evoyer par email"
+
+[sc_share_tumblr]
+other = "Partager sur Tumblr"
+
+[sc_share_reddit]
+other = "Partager sur Reddit"
+
+#aboutauthor.html
+
+[aboutauthor_more]
+other = "Voir plus de contenu écrit par cet auteur"
+
+# subtitle.html
+
+[subtitle_published]
+other = "Publié le {{ .Date.Day }} {{ index $.Site.Data.monthshrtfr (printf \"%d\" .Date.Month)}} {{ .Date.Year }}"
+
+[subtitle_updated]
+other = "Mis à jour le {{ .Lastmod.Day }} {{ index $.Site.Data.monthshrtfr (printf \"%d\" .Lastmod.Month)}} {{ .Lastmod.Year }}"
+
+[subtitle_readtime]
+one = "Durée de lecture : {{ .Count }} minute"
+other = "Durée de lecture : {{ .Count }} minutes"
+
+# taglist.html
+
+[taglist_categories]
+one = "Catégorie"
+other = "Catégories"
+
+# lightbox.html
+
+[lightbox_original]
+other = "Fichier original"
+
+# video.html shortcode
+
+[video_nojs]
+other = "Pour regarder cette vidéo, vous devez activer le Javascript ou mettre à jour votre navigateur internet. Vous pouvez cependant télécharger la vidéo "
+
+[video_nojs_or]
+other = "ou"
+
+[video_nojs_here]
+other = "ici"
+
+
+#giststatus.html shortcode
+[gitstatus-na]
+other = "Le status Git n'est pas disponible"

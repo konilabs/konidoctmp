@@ -1,0 +1,16 @@
+{{ define "main" }}
+    <main class="{{ delimit (.Scratch.Get "main_classes") " " }}">
+        {{- if not .Params.hide_title }}
+        <h1>{{ .Title }}</h1>
+        {{ partial "subtitle.html" . }}
+        {{- end -}}
+        {{ partial "notifications.html" . }}
+        {{ .Content }}
+    </main>
+    {{- if .Scratch.Get "toc_show" }}
+        <nav id="tocnav">
+            {{ .Scratch.Get "toc_content" }}
+        </nav>
+    {{ end -}}
+    {{ partial "sidemenu.html" . }}
+{{ end }}

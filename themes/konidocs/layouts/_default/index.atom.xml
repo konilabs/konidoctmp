@@ -1,0 +1,94 @@
+{{- $pages := where .Site.RegularPages ".Type" "blog" -}}
+{{- $limit := .Site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 1 -}}
+{{- $pages = $pages | first $limit -}}
+{{- end -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\"?>" | safeHTML }}
+<feed xmlns="http://www.w3.org/2005/Atom"{{ with site.LanguageCode }} xml:lang="{{ . }}"{{ end }}>
+    <generator uri="https://gohugo.io/" version="{{ hugo.Version }}">Hugo</generator>
+    <title type="html">{{ .Site.Title }}{{if .Site.IsMultiLingual }} ({{.Site.Language.Lang}}){{ end }}</title>
+    {{ with .Site.Params.feeddesc }}<subtitle>{{.}}</subtitle>{{ end }}
+    <updated>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</updated>
+    <id>{{ .Permalink }}</id>
+    {{ with $.Site.Params.webmastermail -}}
+    <author>
+    {{ with $.Site.Params.webmastername }}<name>{{.}}</name>{{end}}
+    <email>{{.}}</email> 
+    <uri>{{$.Site.Home.Permalink}}</uri>
+    </author>
+    {{- end }}
+    {{ with  .OutputFormats.Get "atom" -}}
+    {{ printf `<link rel="self" type=%q href=%q />` .MediaType.Type .Permalink | safeHTML -}}
+    {{- end }}  
+    {{ range .AlternativeOutputFormats -}}
+        {{ printf `<link rel="alternate" type=%q href=%q />` .MediaType.Type .Permalink | safeHTML -}}
+    {{- end -}}
+    {{- range .Translations -}}
+    {{- $lang := .Lang }}
+    {{ with  .OutputFormats.Get "atom" -}}
+    {{ printf `<link rel="alternate" type=%q hreflang=%q href=%q />` .MediaType.Type $lang .Permalink | safeHTML -}}
+    {{- end }}  
+    {{- range .AlternativeOutputFormats }}
+    {{ printf `<link rel="alternate" type=%q hreflang=%q href=%q />` .MediaType.Type $lang .Permalink | safeHTML }}
+    {{- end -}}
+    {{- end }}
+    {{- with $.Site.Params.copyrighttxt }}
+    <rights>{{ partial "copyright.html" (dict "context" $ "copyrighttxt" . ) }}</rights>
+    {{- else -}}
+        {{ with $.Site.Copyright }}
+        <rights>{{ partial "copyright.html" (dict "context" $ ) }}</rights>
+        {{ end }}
+    {{end}}
+
+    {{- with .Site.Params.feedcategories }}
+    {{ range . -}}
+    <category term="{{.}}" />
+    {{ end -}}
+    {{- end -}}
+
+    {{- with .Site.Params.feedimg -}}
+    <icon>{{ . | absURL }}</icon>
+    {{- end }}
+    {{ with .Site.Params.atomlogo -}}
+    <logo>{{ . | absURL }}</logo>
+    {{- end }}
+
+    {{- range $pages }}
+    <entry>
+        <title>{{.Title | safeHTML}}</title>
+        <id>{{ .Permalink }}</id>
+        <published>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</published>
+        <updated>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</updated>
+        {{- with .Param "authors" -}}
+        {{- $name := index . 0 -}}
+        {{- $path := printf "/%s/%s" "authors" ($name | urlize) -}}
+        {{- with $.Site.GetPage $path }}
+        <author>
+           <name>{{ .Title }}</name>
+           {{ with .Params.email }}<email>{{.}}</email>{{end}}
+        </author>
+        {{ end -}}
+        {{- end -}}
+        <summary type="html">
+        {{ .Summary | html }}
+        </summary>
+        <content type="html">
+        {{ .Content | html }}
+        </content>
+        <link href="{{ .Permalink }}" rel="alternate" type="text/html" />
+        {{ range .Translations }}
+            {{- $link := .Permalink | safeHTML }}
+            {{- printf `<link href=%q rel="alternate" type="text/html" hreflang=%q />` $link .Lang | safeHTML }}
+        {{- end }}
+        {{- with .Params.tags -}}
+        {{ range . }}
+        <category term="{{. | safeHTML }}" />
+        {{- end -}}
+        {{- end -}}
+        {{- $source_name := "" -}}
+        {{- with .Params.source_name -}}
+            {{- $source_name = . -}}
+        {{- end }}
+    </entry>
+    {{- end }}
+</feed>

@@ -1,0 +1,72 @@
+{{/* Use first parameter or src as Image source */}}
+{{- $img := "" -}}
+{{- $preset := "default" -}}
+{{- $arg0 := .Get 0 -}}
+{{- $arg1 := "" -}}
+
+{{- with (.Get 1) -}}
+    {{- $arg1 = . -}}
+{{- end -}}
+
+{{- if .IsNamedParams -}}
+    {{- with (.Get "preset") -}}
+        {{- $preset = . -}}
+    {{- end -}}
+    {{- $img = .Page.Resources.GetMatch (.Get "src") -}}
+{{- else -}}
+    {{- with .Page.Resources.GetMatch (.Get 0) -}}
+        {{- $img = . -}}
+    {{- else -}}
+        {{- $preset = $arg0 -}}
+        {{- $img = .Page.Resources.GetMatch ($arg1) -}}
+    {{- end -}}
+{{- end -}}
+
+{{/* Extract caption from resource title */}}
+{{- $caption := "" -}}
+{{- if ne (path.Base $img.Permalink) $img.Title -}}
+{{- $caption = $img.Title -}}
+{{- end -}}
+
+{{/* Perform image thumb processing */}}
+{{- $imgthumb := "" -}} 
+
+{{/* If shortcode is inside imginline create a fixed size thumbnail */}}
+{{/* Use img_shortcode_inlinefill parameter or fallback to default */}}
+{{- with .Parent -}}
+    {{- if eq .Name "imginline" -}}
+        {{ $imgthumb = partial "tools/img-process.html" (dict "Page" $.Site "resource" $img "context" "inline" "preset" $preset) }}
+    {{- end -}}
+{{/* Shorcode is not inside imginline, we keep original aspect ratio */}}
+{{- else -}}
+    {{ $imgthumb = partial "tools/img-process.html" (dict "Page" $.Site "resource" $img "context" "img" "preset" $preset) }}
+{{- end -}}
+
+{{- with .Parent -}}
+  {{- if ne .Name "imginline" -}}
+    <div class="img-container">
+    {{- else -}}
+    <div class="img-container-inline">
+  {{- end -}}
+{{- else -}}
+  <div class="img-container">
+{{- end -}}
+
+{{- $alt := "" -}}
+{{- with $img.Params.alt -}}
+    {{- $alt = . -}}
+{{- else -}}
+    {{- warnf "Image %q has no alt attribute" $img.Permalink -}}
+{{- end -}}
+
+{{- with $caption }}
+<figure>
+{{ end -}}
+<a href="{{ $img.RelPermalink }}" class="lightbox-link" {{if $img.Params.gallery}}data-id="{{$img.Params.gallery}}"{{else}}data-id="{{ anchorize (path.Base $img.RelPermalink) }}"{{end}} data-number="{{$img.Params.id}}">
+    <img src="{{ $imgthumb.RelPermalink }}" alt="{{ $alt }}">
+</a>
+{{- with $caption }}
+<figcaption>{{.}}</figcaption>
+</figure>
+{{ end -}}
+</div>

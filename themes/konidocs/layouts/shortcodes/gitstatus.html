@@ -1,0 +1,10 @@
+{{ if eq (.Get 0) "now" -}}
+    <p>{{ now.Format $.Site.Params.datehoursecondformat }}</p>
+{{- else -}}
+    {{- with $.Site.Data.gitstatus -}}
+        <p>{{ replace (index $.Site.Data.gitstatus ($.Get 0)) "\n" "<br/>" | safeHTML }}</p>
+    {{- else -}}
+        {{ warnf "You should run git status update script" }}
+        <p>{{ i18n "gitstatus-na" }}</p>
+    {{- end -}}
+{{- end }}

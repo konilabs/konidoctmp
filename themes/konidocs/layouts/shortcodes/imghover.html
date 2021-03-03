@@ -1,0 +1,53 @@
+<div class="img-hover">
+    {{- $preset := "default" -}}
+    {{- $img := "" -}}
+    {{- $ignorearg := 0 -}}
+    {{- $arg0 := .Get 0 -}}
+    {{- $arg1 := "" -}}
+    
+    {{- with (.Get 1) -}}
+        {{- $arg1 = . -}}
+    {{- end -}}
+    
+    {{- with .Page.Resources.GetMatch (.Get 0) -}}
+        {{- $img = . -}}
+    {{- else }}
+        {{- $preset = $arg0 -}}
+        {{- $img = .Page.Resources.GetMatch ($arg1) -}}
+        {{- $ignorearg = 1 -}}
+    {{- end -}}
+
+    {{- $imgthumb := "" -}}
+    {{ $imgthumb = partial "tools/img-process.html" (dict "Page" $.Site "resource" $img "context" "hover" "preset" $preset) }}
+    {{- $alt := "" -}}
+    {{- with $img.Params.alt -}}
+        {{- $alt = . -}}
+    {{- else -}}
+        {{- warnf "Image %q has no alt attribute" $img.Permalink -}}
+    {{- end }}
+    <div class="img-container">
+        <img src="{{ $imgthumb.RelPermalink }}" alt="{{ $alt }}">
+    </div>
+    <div class="buttons">
+        <ul>
+        {{ $i := 0 }}
+        {{- range .Params -}}
+            {{- if gt $ignorearg 0 -}}
+                {{ $ignorearg = sub $ignorearg 1 }}
+            {{- else -}}          
+                {{- $img := $.Page.Resources.GetMatch . -}}
+                {{- $imgthumb := "" -}}
+                {{ $imgthumb = partial "tools/img-process.html" (dict "Page" $.Site "resource" $img "context" "hover" "preset" $preset) }}
+                {{- $alt := "" -}}
+                {{- with $img.Params.alt -}}
+                    {{- $alt = . -}}
+                {{- else -}}
+                    {{- warnf "Image %q has no alt attribute" $img.Permalink -}}
+                {{- end -}}
+                <li {{ if eq $i 0 }} class="active"{{ end }} data-src="{{ $imgthumb.RelPermalink }}" data-alt="{{ $alt }}">{{$img.Title}}</li>
+                {{ $i = add $i 1 }}
+            {{- end -}}
+        {{- end -}}
+        </ul>
+    </div>
+</div>

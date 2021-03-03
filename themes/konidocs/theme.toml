@@ -1,0 +1,12 @@
+name = "Konidocs"
+license = "Apache 2.0"
+licenselink = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+description = "Konidocs theme for Hugo"
+homepage = "https://www.konilabs.net"
+tags = ["documentation", "multilingual", "customizable", "docs"]
+features = []
+min_version = "0.41"
+
+[author]
+  name = "Nicolas PERRIN"
+  homepage = "https://www.konilabs.net"
